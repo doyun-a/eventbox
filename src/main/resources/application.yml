@@ -1,3 +1,27 @@
 kakao:
   client_id: b166962f2422b2f28240752cd4f81284
   redirect_uri: http://localhost:8080/callback
+
+naver:
+  client:
+    id: qorw2hi6C4VyWTrFe0RM
+    secret: 9jXFXSmWCV
+  redirect:
+    url: http://localhost:8080/naverLogin
+
+
+spring:
+  datasource:
+    url: jdbc:mysql://localhost:3306/eventbox?allowPublicKeyRetrieval=true&useSSL=false
+    username: root
+    password: 1234
+    driver-class-name: com.mysql.cj.jdbc.Driver
+
+  jpa:
+    hibernate:
+      ddl-auto: create # 필요에 따라 create, create-drop, none 등으로 변경 가능
+    show-sql: true # Hibernate 실행 SQL을 콘솔에 출력
+    properties:
+      hibernate:
+        format_sql: true # SQL 포맷팅
+        use_sql_comments: true # SQL에 주석 추가

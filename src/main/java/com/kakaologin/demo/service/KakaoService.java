@@ -2,6 +2,7 @@ package com.kakaologin.demo.service;
 
 import com.kakaologin.demo.dto.KakaoTokenResponseDto;
 import com.kakaologin.demo.dto.KakaoUserInfoResponseDto;
+import com.kakaologin.demo.util.JwtUtil;
 import io.netty.handler.codec.http.HttpHeaderValues;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -12,6 +13,10 @@ import org.springframework.http.HttpStatusCode;
 import org.springframework.stereotype.Service;
 import org.springframework.web.reactive.function.client.WebClient;
 import reactor.core.publisher.Mono;
+
+import java.util.Date;
+import java.util.HashMap;
+import java.util.Map;
 
 
 @Slf4j
@@ -79,9 +84,21 @@ public class KakaoService {
                 .block();
 
         log.info("[ Kakao Service ] Auth ID ---> {} ", userInfo.getId());
-        log.info("[ Kakao Service ] NickName ---> {} ", userInfo.getKakaoAccount().getProfile().getNickName());
-        log.info("[ Kakao Service ] ProfileImageUrl ---> {} ", userInfo.getKakaoAccount().getProfile().getProfileImageUrl());
+        //log.info("[ Kakao Service ] NickName ---> {} ", userInfo.getKakaoAccount().getProfile().getNickName());
+       // log.info("[ Kakao Service ] ProfileImageUrl ---> {} ", userInfo.getKakaoAccount().getProfile().getProfileImageUrl());
 
+        userInfo.setConnectedAt(new Date());
         return userInfo;
+    }
+
+    public String createJwtForUser(KakaoUserInfoResponseDto userInfo) {
+        // JWT Payload에 포함할 사용자 정보 설정
+        Map<String, Object> claims = new HashMap<>();
+        claims.put("id", userInfo.getId());
+        claims.put("nickname", userInfo.getKakaoAccount().getProfile().getNickName());
+        //claims.put("email", userInfo.getKakaoAccount().getEmail());
+
+        // JWT 생성 (만료 시간: 1시간)
+        return JwtUtil.generateToken(claims, 3600000);
     }
 }

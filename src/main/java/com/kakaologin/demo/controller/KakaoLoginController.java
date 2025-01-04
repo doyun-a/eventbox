@@ -1,28 +1,18 @@
 package com.kakaologin.demo.controller;
 
-import com.fasterxml.jackson.core.type.TypeReference;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.kakaologin.demo.dto.KakaoUserInfoResponseDto;
+import com.kakaologin.demo.dto.ResponseDTO;
+import com.kakaologin.demo.entity.User;
 import com.kakaologin.demo.service.KakaoService;
+import com.kakaologin.demo.service.UserRepository;
+import com.kakaologin.demo.service.KakaoUserService;
+import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStreamReader;
-import java.net.HttpURLConnection;
-import java.net.URL;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.*;
 
 @Slf4j
 @RestController
@@ -32,13 +22,41 @@ public class KakaoLoginController {
 
     private final KakaoService kakaoService;
 
-    @GetMapping("/callback")
-    public ResponseEntity<?> callback(@RequestParam("code") String code) {
-        String accessToken = kakaoService.getAccessTokenFromKakao(code);
+    private final UserRepository userRepository;
 
+    private final KakaoUserService kakaoUserService;
+
+    @Transactional
+    @PostMapping("/callback")
+    public ResponseEntity<ResponseDTO> callback(@RequestParam("code") String code) {
+        String accessToken = kakaoService.getAccessTokenFromKakao(code);
         KakaoUserInfoResponseDto userInfo = kakaoService.getUserInfo(accessToken);
 
+        Optional<User> existingUser = userRepository.findByOauthId(userInfo.getId());
+
+        User user;
+        if (existingUser.isPresent()) {
+            // 기존 사용자 정보가 있으면 업데이트
+            user = existingUser.get();
+            user.setNickname(userInfo.getKakaoAccount().getProfile().getNickName());
+            user.setOauthId(userInfo.getId());
+            user.setConnectedAt(new Date());
+            user.setWebName("K");
+
+        } else {
+            // 새로 사용자 등록
+            user = new User();
+            user.setOauthId(userInfo.getId());
+            user.setNickname(userInfo.getKakaoAccount().getProfile().getNickName());
+            user.setConnectedAt(new Date());
+            user.setWebName("K");
+
+        }
+        userRepository.save(user);
+
         // User 로그인, 또는 회원가입 로직 추가
-        return new ResponseEntity<>(HttpStatus.OK);
+        String jwtToken = kakaoService.createJwtForUser(userInfo);
+        ResponseDTO response = kakaoUserService.getUserInfo(userInfo, jwtToken);
+        return ResponseEntity.ok(response);
     }
 }

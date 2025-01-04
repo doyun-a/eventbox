@@ -27,11 +27,20 @@ dependencies {
 	compileOnly 'org.projectlombok:lombok'
 	annotationProcessor 'org.projectlombok:lombok'
 
+	implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
+	runtimeOnly 'com.mysql:mysql-connector-j'
+
 	//Webflux
 	implementation 'org.springframework.boot:spring-boot-starter-webflux'
 
 	//thymeleaf
 	implementation 'org.springframework.boot:spring-boot-starter-thymeleaf'
+
+	implementation 'io.jsonwebtoken:jjwt-api:0.11.5' // JWT Core API
+	runtimeOnly 'io.jsonwebtoken:jjwt-impl:0.11.5'   // JWT 구현체
+	runtimeOnly 'io.jsonwebtoken:jjwt-jackson:0.11.5' // JSON 처리 (Jackson)
+	implementation 'com.googlecode.json-simple:json-simple:1.1.1'
+
 }
 
 tasks.named('test') {
