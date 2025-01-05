@@ -3,7 +3,9 @@ package com.kakaologin.demo.controller;
 import com.kakaologin.demo.dto.NaverDTO;
 import com.kakaologin.demo.dto.ResponseDTO;
 import com.kakaologin.demo.entity.User;
-import com.kakaologin.demo.service.*;
+import com.kakaologin.demo.repository.UserRepository;
+import com.kakaologin.demo.service.Impl.NaverService;
+import com.kakaologin.demo.service.Impl.NaverUserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -18,7 +20,7 @@ public class NaverLoginController {
 
     private final NaverService naverService;
 
-    private final  NaverUserService naverUserService;
+    private final NaverUserService naverUserService;
 
     private final UserRepository userRepository;
 

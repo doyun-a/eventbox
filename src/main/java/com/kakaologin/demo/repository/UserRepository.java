@@ -1,7 +1,6 @@
-package com.kakaologin.demo.service;
+package com.kakaologin.demo.repository;
 
 
-import com.kakaologin.demo.dto.KakaoUserInfoResponseDto;
 import com.kakaologin.demo.entity.User;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;

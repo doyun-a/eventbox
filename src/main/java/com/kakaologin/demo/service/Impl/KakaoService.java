@@ -1,4 +1,4 @@
-package com.kakaologin.demo.service;
+package com.kakaologin.demo.service.Impl;
 
 import com.kakaologin.demo.dto.KakaoTokenResponseDto;
 import com.kakaologin.demo.dto.KakaoUserInfoResponseDto;

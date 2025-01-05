@@ -3,12 +3,17 @@ package com.kakaologin.demo.controller;
 import com.kakaologin.demo.dto.KakaoUserInfoResponseDto;
 import com.kakaologin.demo.dto.ResponseDTO;
 import com.kakaologin.demo.entity.User;
-import com.kakaologin.demo.service.KakaoService;
-import com.kakaologin.demo.service.UserRepository;
-import com.kakaologin.demo.service.KakaoUserService;
+import com.kakaologin.demo.service.Impl.KakaoService;
+import com.kakaologin.demo.repository.UserRepository;
+import com.kakaologin.demo.service.Impl.KakaoUserService;
+import com.kakaologin.demo.service.JwtService;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.ResponseCookie;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -17,7 +22,7 @@ import java.util.*;
 @Slf4j
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("")
+@CrossOrigin(origins = "*")
 public class KakaoLoginController {
 
     private final KakaoService kakaoService;
@@ -26,9 +31,17 @@ public class KakaoLoginController {
 
     private final KakaoUserService kakaoUserService;
 
+    private final JwtService jwtService;
+
+    @GetMapping("/a")
+    public String test(){
+        return "test";
+    }
+
     @Transactional
     @PostMapping("/callback")
-    public ResponseEntity<ResponseDTO> callback(@RequestParam("code") String code) {
+    public ResponseEntity<ResponseDTO> callback(@RequestBody Map<String, String> requestBody, HttpServletResponse response) {
+        String code = requestBody.get("code");
         String accessToken = kakaoService.getAccessTokenFromKakao(code);
         KakaoUserInfoResponseDto userInfo = kakaoService.getUserInfo(accessToken);
 
@@ -56,7 +69,21 @@ public class KakaoLoginController {
 
         // User 로그인, 또는 회원가입 로직 추가
         String jwtToken = kakaoService.createJwtForUser(userInfo);
-        ResponseDTO response = kakaoUserService.getUserInfo(userInfo, jwtToken);
-        return ResponseEntity.ok(response);
+
+
+        ResponseCookie cookie = ResponseCookie.from("jwtToken", jwtToken)
+                .httpOnly(false) // JavaScript에서 접근 불가
+                .secure(false)   // HTTPS에서만 전송
+                .path("/")      // 쿠키가 유효한 경로
+                .sameSite("Lax") // CSRF 공격 방어
+                .domain("localhost")
+                .build();
+
+        response.setHeader("Set-Cookie", cookie.toString());
+
+
+        ResponseDTO responseDTO = kakaoUserService.getUserInfo(userInfo, jwtToken);
+        return ResponseEntity.ok(responseDTO);
     }
+
 }

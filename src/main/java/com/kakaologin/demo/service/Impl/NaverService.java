@@ -1,7 +1,6 @@
-package com.kakaologin.demo.service;
+package com.kakaologin.demo.service.Impl;
 
 
-import com.kakaologin.demo.dto.KakaoUserInfoResponseDto;
 import com.kakaologin.demo.dto.NaverDTO;
 import com.kakaologin.demo.util.JwtUtil;
 import org.json.simple.JSONObject;

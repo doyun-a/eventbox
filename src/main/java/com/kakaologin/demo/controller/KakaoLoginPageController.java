@@ -1,18 +1,18 @@
 package com.kakaologin.demo.controller;
 
-import com.kakaologin.demo.service.NaverService;
-import jakarta.servlet.http.HttpSession;
+import com.kakaologin.demo.service.Impl.NaverService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
 
 @Controller
 @RequestMapping("/login")
 @RequiredArgsConstructor
+@CrossOrigin(origins = "*")
 public class KakaoLoginPageController {
 
     @Value("${kakao.client_id}")

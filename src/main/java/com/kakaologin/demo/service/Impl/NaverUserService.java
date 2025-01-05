@@ -1,6 +1,5 @@
-package com.kakaologin.demo.service;
+package com.kakaologin.demo.service.Impl;
 
-import com.kakaologin.demo.dto.KakaoDataDTO;
 import com.kakaologin.demo.dto.NaverDTO;
 
 import com.kakaologin.demo.dto.NaverDataDTO;
