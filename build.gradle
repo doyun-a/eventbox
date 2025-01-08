@@ -41,6 +41,8 @@ dependencies {
 	runtimeOnly 'io.jsonwebtoken:jjwt-jackson:0.11.5' // JSON 처리 (Jackson)
 	implementation 'com.googlecode.json-simple:json-simple:1.1.1'
 
+	implementation 'org.modelmapper:modelmapper:3.1.1'
+
 }
 
 tasks.named('test') {

@@ -1,11 +1,11 @@
-server:
-  ssl:
-    enabled: true
-    key-store: classpath:localhost.p12
-    key-store-password: changeit
-    key-store-type: PKCS12
-    key-alias: localhost
-  port: 8080
+#server:
+#  ssl:
+#    enabled: true
+#    key-store: classpath:localhost.p12
+#    key-store-password: changeit
+#    key-store-type: PKCS12
+#    key-alias: localhost
+#  port: 8080
 
 
 
@@ -37,10 +37,10 @@ spring:
         format_sql: true # SQL 포맷팅
         use_sql_comments: true # SQL에 주석 추가
 
-  ssl:
-    bundle:
-      pem:
-        tomcat:
-          keystore:
-            certificate: "classpath:localhost.pem"
-            private-key: "classpath:localhost-key.pem"
+#  ssl:
+#    bundle:
+#      pem:
+#        tomcat:
+#          keystore:
+#            certificate: "classpath:localhost.pem"
+#            private-key: "classpath:localhost-key.pem"
