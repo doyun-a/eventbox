@@ -6,6 +6,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
 
 
 @RestController
@@ -23,6 +24,14 @@ public class PostController {
     public ResponseEntity<PostDto> createPost(@RequestBody PostDto postDto, @RequestHeader("username") String username) {
         PostDto createdPost = postService.createPost(postDto, username);
         return ResponseEntity.status(HttpStatus.CREATED).body(createdPost);
+    }
+
+    @GetMapping
+    public ResponseEntity<List<PostDto>> getAllPosts(
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "10") int size) {
+        List<PostDto> posts = postService.getAllPosts(page, size);
+        return ResponseEntity.ok(posts);
     }
 
 }

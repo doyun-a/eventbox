@@ -5,9 +5,14 @@ import com.kakaologin.demo.post.entity.Post;
 import com.kakaologin.demo.post.repository.PostRepository;
 import com.kakaologin.demo.post.service.PostService;
 import org.modelmapper.ModelMapper;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
+import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 public class PostServiceImpl implements PostService {
@@ -33,6 +38,20 @@ public class PostServiceImpl implements PostService {
 
         // Entity → DTO 변환
         return modelMapper.map(savedPost, PostDto.class);
+    }
+
+    @Override
+    public List<PostDto> getAllPosts(int page, int size) {
+        // PageRequest로 페이징 요청 생성 (최신 글 순으로 정렬)
+        PageRequest pageRequest = PageRequest.of(page, size, Sort.by(Sort.Direction.DESC, "createdAt"));
+
+        // 데이터베이스에서 페이징 처리된 결과 조회
+        Page<Post> postPage = postRepository.findAll(pageRequest);
+
+        // Page<Post> -> List<PostDto> 변환
+        return postPage.getContent().stream()
+                .map(post -> modelMapper.map(post, PostDto.class))
+                .collect(Collectors.toList());
     }
 
 
