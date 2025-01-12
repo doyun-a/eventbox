@@ -22,7 +22,7 @@ import java.util.*;
 @RequiredArgsConstructor
 @CrossOrigin(origins = "*")
 public class KakaoLoginController {
-git a
+
     private final KakaoService kakaoService;
 
     private final UserRepository userRepository;
