@@ -8,17 +8,15 @@ import lombok.Getter;
 import lombok.Setter;
 
 @Entity
-@Getter
-@Setter
-public class User1 {
-
+@Getter @Setter
+public class BoardStatus {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    private String userid;
-    private String profileImage;
-    private int activityScore;
+    private Long boardId;  // 게시글 ID
+    private int viewCount;  // 조회수
+    private int likeCount;  // 좋아요 수
 
 
 }

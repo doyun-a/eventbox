@@ -10,4 +10,8 @@ public class User1Dto {
     private String userid;
     private String profileImage;
     private int activityScore;
+
+
+
+
 }

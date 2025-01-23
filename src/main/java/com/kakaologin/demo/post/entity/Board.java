@@ -11,27 +11,33 @@ import java.util.List;
 @Entity
 @Getter
 @Setter
-public class Post {
+public class Board {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     private String title;
+    private String contents;
     private String summary;
     private LocalDateTime createdAt;
     private LocalDateTime updatedAt;
     private int likes;
-    private int comments;
+    private int commentcount;
     private boolean isBookmarked;
     private int views;
     private boolean isDeleted;
+    private String category;
+
+    @OneToMany(mappedBy = "board", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<Comment> comments = new ArrayList<>(); // Board와 연결된 댓글들
+
 
     @ManyToOne(fetch = FetchType.LAZY)
-    private User1 author;
+    @JoinColumn(name = "user_id")
+    private Users author;
 
-    @ElementCollection
-    private List<String> tagList = new ArrayList<>();
+
 
 
 
